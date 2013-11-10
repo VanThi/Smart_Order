@@ -1,0 +1,148 @@
+package model;
+
+import javax.swing.*;
+
+import org.omg.CORBA.Request;
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+ 
+/**
+ * The class extends the Thread class so we can receive and send messages at the same time
+ */
+public class TCPServer extends Thread{
+ 
+    public static final int SERVERPORT = 8888;
+    private boolean running = false;
+    private OnMessageReceived messageListener;
+    private ClientRequest clientRequest;
+    private ServerResponse serverResponse;
+    
+    private ObjectOutputStream oos;
+    private ObjectInputStream ois;
+    private static int counter = 0;
+ 
+    /**
+     * Constructor of the class
+     * @param messageListener listens for the messages
+     */
+    public TCPServer(OnMessageReceived messageListener) {
+        this.messageListener = messageListener;
+    }
+ 
+ 
+    /**
+     * Method to send the messages from server to client
+     * @param message the message sent by the server
+     */
+    public void sendObject(ServerResponse serverResponse)throws Exception{
+    	oos.writeObject(serverResponse);
+    }
+ 
+    @Override
+    public void run() {
+ 
+        running = true;
+ 
+        try {
+            System.out.println("S: Connecting...");
+ 
+            //create a server socket. A server socket waits for requests to come in over the network.
+            ServerSocket serverSocket = new ServerSocket(SERVERPORT);
+ 
+            while (true) {
+				//create client socket... the method accept() listens for a connection to be made to this socket and accepts it.
+				final Socket client = serverSocket.accept();
+				// increase connection counter
+				counter++;
+				System.out.println("S: Receiving... ");
+				//process1Con(client);
+				Thread clientThread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							processClientConnection(client);
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(null, "ERROR!");
+						}
+					}
+				});
+				clientThread.start();
+			}
+ 
+        } catch (Exception e) {
+            System.out.println("S: Error");
+            e.printStackTrace();
+        }
+    }
+
+    private void processClientConnection(Socket client) throws Exception{
+		try {
+			//sends the message to the client
+			oos = new ObjectOutputStream(client.getOutputStream());
+
+			//read the message received from client
+			ois=new ObjectInputStream(client.getInputStream());
+			//in this while we wait to receive messages from client (it's an infinite loop)
+			//this while it's like a listener for messages
+			while (running) {
+				clientRequest=(ClientRequest)ois.readObject();
+					//call the method messageReceived from ServerBoard class
+					messageListener.messageReceived(serverResponse);
+					
+				}
+			}
+
+			catch (Exception e) {
+			System.out.println("S: Error");
+			e.printStackTrace();
+		} finally {
+			client.close();
+			System.out.println("S: Done.");
+		}
+    }
+
+	/*private void process1Con(Socket client) throws IOException {
+		try {
+
+			//sends the message to the client
+			mOut = new PrintWriter(new BufferedWriter(
+					new OutputStreamWriter(client.getOutputStream())),
+					true);
+
+			//read the message received from client
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(client.getInputStream()));
+
+			//in this while we wait to receive messages from client (it's an infinite loop)
+			//this while it's like a listener for messages
+			while (running) {
+				String message = in.readLine();
+
+				if (message != null && messageListener != null) {
+					//call the method messageReceived from ServerBoard class
+					messageListener.messageReceived(message);
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.println("S: Error");
+			e.printStackTrace();
+		} finally {
+			client.close();
+			System.out.println("S: Done.");
+		}
+	}*/
+ 
+ 
+    //Declare the interface. The method messageReceived(String message) will must be implemented in the ServerBoard
+    //class at on startServer button click
+    public interface OnMessageReceived {
+        public void messageReceived(ServerResponse serverResponse);
+    }
+ 
+}

@@ -1,0 +1,127 @@
+package com.cybersoftteam.app.project_so.controller;
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+
+import com.cybersoftteam.app.project_so.R;
+import com.cybersoftteam.app.project_so.network.TCPClient;
+
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class CustomerConfiguration extends Fragment{
+	//private Activity act;
+	private EditText username; 
+	private EditText password;
+	private EditText confirm;
+	private EditText fullname;
+	private EditText email;
+	private EditText phoneNumber;
+	private EditText address;
+	private Button save;
+	private Button clear;
+	private ClientRequest clientRequest;
+	private TCPClient tcpClient;
+	private ConnectTask con;
+	private ServerResponse serverResponse;
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		//this.act=activity;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Log.i("fragment", "====this is fragmenr configuration======");
+		View view=inflater.inflate(R.layout.customer_configuration,container, false);
+
+		username =(EditText)view.findViewById(R.id.et_userName_con);
+		password =(EditText)view.findViewById(R.id.et_password_con);
+		confirm =(EditText)view.findViewById(R.id.et_comfrim_con);
+		fullname =(EditText)view.findViewById(R.id.et_fullname_con);
+		email =(EditText)view.findViewById(R.id.et_email_con);
+		phoneNumber =(EditText)view.findViewById(R.id.et_phoneNumber_con);
+		address =(EditText)view.findViewById(R.id.et_address_con);
+
+		save= (Button)view.findViewById(R.id.save_con);
+		clear= (Button)view.findViewById(R.id.clear_con);
+
+
+		save.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				
+				//set request object
+				clientRequest=new ClientRequest(ClientRequest.REGISTER,
+						username.getText().toString(),
+						password.getText().toString(), fullname.getText().toString()
+						, address.getText().toString(), 
+						phoneNumber.getText().toString(),
+						email.getText().toString())
+				//sent pack to server
+
+
+				//received from sever, 
+
+				//if register is true, change to login activity 
+
+				//else show alert "user name is already"
+			}
+		});
+		clear.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				username.setText("");
+				password.setText("");
+				confirm.setText("");
+				fullname.setText("");
+				email.setText("");
+				phoneNumber.setText("");
+				address.setText("");
+			}
+		});
+
+		return view;
+	}
+
+	//do in background
+	//da thu tach rieng ra, nhung khong the thuc hien duoc
+	//vi khi doiinbackground thuc thi thi khong lay lai gia tri cua serverreponse
+	//giai phap hien tai viet ngay trong activity
+
+	public class ConnectTask extends AsyncTask<TCPClient, ServerResponse, ServerResponse>{
+
+		@Override
+		protected ServerResponse doInBackground(TCPClient... tcpClients) {
+			//we create a TCPClient object and
+			Log.i("asynctask", "doing backgroud---------------------");
+			tcpClient.run();
+			Log.i("asynstask ","request "+ clientRequest+" response"+ serverResponse.getDetail());
+			publishProgress(serverResponse);
+			return serverResponse;
+		}
+
+		@Override
+		protected void onPostExecute(ServerResponse result) {
+			Log.i("asyntask", "this is dopost server response"+ tcpClient.getServerResponse().getMenu());
+			//if request is order
+			//process order
+
+			//if request if update 
+			//process update
+			//update list adapter
+		}
+	}
+}

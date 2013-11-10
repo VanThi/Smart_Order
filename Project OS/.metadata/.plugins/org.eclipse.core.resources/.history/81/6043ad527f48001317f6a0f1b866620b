@@ -1,0 +1,47 @@
+package com.cybersoftteam.app.project_so.network;
+
+
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+import android.os.AsyncTask;
+import android.util.Log;
+
+public class ConnectTask extends AsyncTask<TCPClient, ServerResponse, ServerResponse>{
+
+	private TCPClient myTCPClient;
+	private ServerResponse serverResponse;
+	private ClientRequest clientRequest;
+
+	public ConnectTask(TCPClient myClient, ServerResponse serverResponse, ClientRequest clientRequest, boolean flag){
+		this.myTCPClient=myClient;
+		this.serverResponse=serverResponse;
+		this.clientRequest=clientRequest;
+		Log.i("network", "tao connect task thanh cong");
+	}
+
+	@Override
+	protected ServerResponse doInBackground(TCPClient... tcpClients) {
+		//we create a TCPClient object and
+		Log.i("asynctask", "doing backgroud---------------------");
+		myTCPClient.run();
+		Log.i("asynstask ","request "+ clientRequest+" response"+ serverResponse.getDetail());
+		publishProgress(serverResponse);
+		return serverResponse;
+	}
+	
+	/*@Override
+	protected void onProgressUpdate(ServerResponse... values) {
+		flag=true;
+		Log.i("asynctask", "on progressupdate "+ values[0].getDetail());
+		serverResponse=values[0];
+		
+	}*/
+	@Override
+	protected void onPostExecute(ServerResponse result) {
+		Log.i("asyntask", "this is dopost");
+		Log.i("asyntask", "this is dopost server response"+ myTCPClient.getServerResponse().getDetail());
+	}
+	
+}
+

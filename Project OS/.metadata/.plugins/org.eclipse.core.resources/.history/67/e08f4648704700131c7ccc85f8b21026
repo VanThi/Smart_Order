@@ -1,0 +1,47 @@
+package smartorder.common;
+
+
+import com.cybersoftteam.app.project_so.network.TCPClient.OnObjectRecieved;
+
+import smartorder.common.ServerResponse;
+import android.R.bool;
+import android.os.AsyncTask;
+import android.util.Log;
+
+public class ConnectTask extends AsyncTask<ServerResponse, ServerResponse, TCPClient>{
+
+	private TCPClient myTCPClient;
+	private ServerResponse serverResponse;
+	private boolean flag=false;
+
+	public ConnectTask(TCPClient myClient, ServerResponse serverResponse,boolean flag){
+		this.myTCPClient=myClient;
+		this.serverResponse=serverResponse;
+		this.flag=flag;
+	}
+
+	@Override
+	protected TCPClient doInBackground(ServerResponse... params) {
+		//we create a TCPClient object and
+		myTCPClient =new TCPClient(new OnObjectRecieved() {
+			
+			@Override
+			public void objectRecieved(ServerResponse serverResponse) {
+				//this method calls the onProgressUpdate
+                publishProgress(serverResponse);
+				
+			}
+		});
+		return null;
+	}
+	
+	@Override
+	protected void onProgressUpdate(ServerResponse... values) {
+		
+		flag=true;
+		Log.i("onProgressUpdate", "so phan tu nhan ve la "+values.length);
+		serverResponse=values[0];
+		
+	}
+}
+

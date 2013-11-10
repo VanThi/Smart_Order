@@ -1,0 +1,48 @@
+package com.cybersoftteam.app.project_so.adapter;
+
+import java.util.ArrayList;
+
+import android.R;
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+public class CustomerViewOrderAdapter extends BaseAdapter {
+	private Context context;
+	private ArrayList<String> listViewOrder;
+	
+	public CustomerViewOrderAdapter() {
+	}
+	
+	public CustomerViewOrderAdapter(Activity act,ArrayList<String> listViewOder){
+		this.context=act;
+		this.listViewOrder=listViewOder;
+	}
+	@Override
+	public int getCount() {
+		return listViewOrder.size();
+	}
+	
+	@Override
+	public Object getItem(int position) {
+		return listViewOrder.get(position);
+	}
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		LayoutInflater inflater= (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+		
+		TextView listViewOrderItem= (TextView)convertView.findViewById();
+		
+		return null;
+	}
+	
+}

@@ -1,0 +1,5 @@
+package com.cybersoftteam.app.project_so.model;
+
+public class OrderItem {
+	
+}

@@ -1,0 +1,68 @@
+package com.cybersoftteam.app.project_so.controller;
+
+import java.util.ArrayList;
+
+import org.w3c.dom.ls.LSInput;
+
+import com.cybersoftteam.app.project_so.R;
+import com.cybersoftteam.app.project_so.adapter.CustomerViewOrderAdapter;
+import com.cybersoftteam.app.project_so.model.OrderItem;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+public class CustomerViewOrder extends Fragment{
+	private Activity act;
+	private CustomerViewOrderAdapter customerViewOrderAdapter; 
+	
+	// The container Activity must implement this interface so the frag can deliver messages
+	public interface OnViewOrderItemSelectListener{
+		public void onViewOrderItemSelected(ArrayList<OrderItem> ois);
+	}
+	
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		this.act=activity;
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Log.i("fragment","=============this is fragment view order================");
+		View view=inflater.inflate(R.layout.customer_vieworder, container, false);
+		ArrayList<String> orderList=new ArrayList<String>();
+		orderList.add("abc e f");
+		orderList.add("asdfads asdfas");
+		orderList.add("sadfads sdaf");
+		Log.i("list", orderList.toString());
+		customerViewOrderAdapter=new CustomerViewOrderAdapter(act,orderList);
+		ListView listview=(ListView)view.findViewById(R.id.customer_vieworder_item);
+		listview.setAdapter(customerViewOrderAdapter);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				//sent request get list order item to sever
+				
+				//received list order item from sever
+				
+				ArrayList<OrderItem> ois=new ArrayList<OrderItem>();
+				ois.add(new OrderItem("asd","asdf1",23,443));
+				ois.add(new OrderItem("sdfa","asdf2",13,3343));
+				ois.add(new OrderItem("dfgsd","asdf3",33,455643));
+				//
+			}
+		});
+		return view;
+	}
+}

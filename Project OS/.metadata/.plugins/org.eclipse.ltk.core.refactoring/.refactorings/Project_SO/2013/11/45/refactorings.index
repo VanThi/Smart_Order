@@ -1,0 +1,43 @@
+1383546119614	Move compilation unit
+1383546190229	Rename type 'MainActivity'
+1383546230103	Rename resource 'activity_main.xml'
+1383546235766	Rename resource 'activity_Login.xml'
+1383547831347	Move folder
+1383556956255	Delete element
+1383556997952	Rename resource 'user_menu.xml'
+1383557187975	Delete element
+1383558096928	Delete element
+1383560721967	Delete element
+1383578103850	Delete element
+1383578107352	Delete element
+1383578703139	Rename type 'CustomerConfiguation'
+1383630440375	Rename resource 'list_vieworder_item.xml'
+1383633487280	Rename type 'Item'
+1383635103688	Rename type 'CustomerScreen'
+1383635368874	Rename type 'CustomerScreenActivity'
+1383669990665	Rename resource 'list_vieworder_item.xml'
+1383670002964	Rename resource 'vieworder_item.xml'
+1383670567809	Rename type 'CustomerListViewOrderItem'
+1383710912500	Delete element
+1383742363426	Rename resource 'dialog_registternull.xml'
+1383742433691	Rename resource 'dialog_registter_is_null.xml'
+1383742799874	Delete element
+1383788089501	Delete elements
+1383791095028	Rename package 'smartorder.network'
+1383791105996	Rename package 'com.cybersoftteam.app.project_so.protocol'
+1383791122333	Copy package
+1383791320286	Rename type 'ListViewOrderItem'
+1383791362238	Rename type 'ListViewOrderItemAdapter'
+1383791404197	Rename resource 'list_vieworder.xml'
+1383791428972	Rename resource 'list_vieworder_item.xml'
+1383803309020	Copy compilation units
+1383803342562	Copy compilation units
+1383891371366	Rename resource 'exclamation5.png'
+1383906907584	Rename compilation unit 'TCPClientConnection.java'
+1383906936087	Delete element
+1383919127524	Extract method 'Logout'
+1383919743671	Delete element
+1383919820199	Delete element
+1383919841212	Delete element
+1383982564035	Rename type 'CustomerConfiguration'
+1383998364377	Delete element

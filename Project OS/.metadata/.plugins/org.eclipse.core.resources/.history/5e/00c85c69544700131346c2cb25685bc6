@@ -1,0 +1,49 @@
+package com.cybersoftteam.app.project_so.controller;
+
+import java.util.ArrayList;
+
+import com.cybersoftteam.app.project_so.R;
+import com.cybersoftteam.app.project_so.adapter.ListViewOrderItemAdapter;
+import com.cybersoftteam.app.project_so.model.OrderItem;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
+public class ViewOrderDeital extends Fragment{
+	private Activity act;
+	private ListViewOrderItemAdapter listViewOrderItemAdapter;
+	private ArrayList<OrderItem> ois=new ArrayList<OrderItem>();
+	private ListView listView ;
+	@Override
+	public void onAttach(Activity activity) {
+		Log.i("fragment", "*********=======this is onattach fragmet list view order item===========");
+		super.onAttach(activity);
+		this.act=activity;
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Log.i("fragment", "*******=======this is oncreateview fragmet list view order item===========");
+		View view=inflater.inflate(R.layout.list_vieworder, container,false);
+		listView=(ListView)view.findViewById(R.id.list_view_order);
+		listViewOrderItemAdapter=new ListViewOrderItemAdapter(act, ois);
+		listView.setAdapter(listViewOrderItemAdapter);
+		return view;
+	}
+	
+	public void updateListViewOrder(ArrayList<OrderItem> ois){
+		Log.i("van thi", "update list view order"+ois.toString());
+		this.ois=ois;
+		listViewOrderItemAdapter=new ListViewOrderItemAdapter(act, ois);
+		
+		
+	}
+	
+}

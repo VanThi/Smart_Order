@@ -1,0 +1,66 @@
+package com.cybersoftteam.app.project_so.protocol;
+
+
+import com.cybersoftteam.app.project_so.protocol.TCPClient.OnObjectRecieved;
+
+import smartorder.network.ServerResponse;
+import android.os.AsyncTask;
+
+public class ConnectTask extends AsyncTask<ServerResponse, ServerResponse, TCPClient>{
+
+	private TCPClient myTCPClient;
+	private ServerResponse serverResponse;
+
+	public ConnectTask(TCPClient myClient, ServerResponse serverResponse){
+		this.myTCPClient=myClient;
+		this.serverResponse=serverResponse;
+	}
+
+	@Override
+	protected TCPClient doInBackground(ServerResponse... params) {
+		//we create a TCPClient object and
+		myTCPClient =new TCPClient(new OnObjectRecieved() {
+			
+			@Override
+			public void objectRecieved(ServerResponse serverResponse) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		return null;
+	}
+	/*@Override
+    protected TCPClient doInBackground(String... message) {
+
+        //we create a TCPClient object and
+        mTcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
+            @Override
+            //here the messageReceived method is implemented
+            public void messageReceived(String[] message) {
+                //this method calls the onProgressUpdate
+                publishProgress(message);
+            }
+        });
+        mTcpClient.run();
+
+        return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+
+        //in the arrayList we add the messaged received from server
+        arrayList.add("MENU\n");
+        for (String mes : values) {
+        	arrayList.add(mes);
+        	//Log.i(tag, msg)
+		}
+        // notify the adapter that the data set has changed. This means that new message received
+        // from server was added to the list
+        mAdapter.notifyDataSetChanged();
+    }
+}
+	 */
+}
+

@@ -1,0 +1,131 @@
+package com.cybersoftteam.app.project_so.adapter;
+
+import java.util.ArrayList;
+
+import com.cybersoftteam.app.project_so.R;
+import com.cybersoftteam.app.project_so.model.MenuItem;
+
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+
+public class MenuItemAdapter extends BaseAdapter{
+	private Context context;
+	private ArrayList<MenuItem> listItem=new ArrayList<MenuItem>();
+	private autoUpdateTotal myCallBack;
+	
+	public MenuItemAdapter(Activity act, ArrayList<MenuItem> listItem){
+		Log.i("adapter", "================this is menu item adapter============");
+		this.context=act;
+		this.listItem=listItem;
+		this.myCallBack=(autoUpdateTotal)act;
+	}
+	@Override
+	public int getCount() {
+		return listItem.size();
+	}
+	
+	public interface autoUpdateTotal{
+		public void updateTotal(String total);
+	}
+	@Override
+	public Object getItem(int position) {
+		return listItem.get(position);
+	}
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
+
+	@Override
+	public View getView(final int position, View convertView, ViewGroup parent) {
+		Log.i("adapter", "================this is view menu item adapter============");
+		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		convertView=inflater.inflate(R.layout.item, null);
+
+		final CheckBox check= (CheckBox)convertView.findViewById(R.id.ischooes);
+		TextView name= (TextView)convertView.findViewById(R.id.nameItem);
+		final EditText quantity=(EditText)convertView.findViewById(R.id.quantity);
+		TextView price = (TextView)convertView.findViewById(R.id.price);
+		final Button dec=(Button)convertView.findViewById(R.id.dec);
+		final Button inc=(Button)convertView.findViewById(R.id.inc);
+		final TextView totalItem=(TextView)convertView.findViewById(R.id.total_item);
+		name.setText(listItem.get(position).getName());
+		price.setText(""+listItem.get(position).getPrice());
+		check.setChecked(false);
+		quantity.setText("1");
+		check.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				listItem.get(position).setChoose(isChecked);
+				listItem.get(position).setQuantity(Integer.parseInt(quantity.getText().toString()));
+				String total=quantity.getText()+"x"+listItem.get(position).getPrice()+"="
+						+(Integer.parseInt(quantity.getText().toString())*listItem.get(position).getPrice());
+				totalItem.setText(total);
+			}
+		});
+
+		dec.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				int qtt=Integer.parseInt(quantity.getText().toString());
+				qtt--;
+				if(qtt==0){
+					qtt=1;
+				}
+				quantity.setText(""+qtt);
+				listItem.get(position).setQuantity(qtt);
+				String total=quantity.getText()+"x"+listItem.get(position).getPrice()+"="
+						+(Integer.parseInt(quantity.getText().toString())*listItem.get(position).getPrice());
+				totalItem.setText(total);
+			}
+		});
+
+		inc.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				int qtt=Integer.parseInt(quantity.getText().toString());
+				qtt++;
+				quantity.setText(""+qtt);
+				listItem.get(position).setQuantity(qtt);
+				String total=quantity.getText()+"x"+listItem.get(position).getPrice()+"="
+						+(Integer.parseInt(quantity.getText().toString())*listItem.get(position).getPrice());
+				totalItem.setText(total);
+			}
+		});
+
+
+		quantity.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+				int qtt=Integer.parseInt(quantity.getText().toString());
+				listItem.get(position).setQuantity(qtt);
+				String total=quantity.getText()+"x"+listItem.get(position).getPrice()+"="
+						+(Integer.parseInt(quantity.getText().toString())*listItem.get(position).getPrice());
+				totalItem.setText(total);
+				return true;
+			}
+		});
+
+		return convertView;
+	}
+
+}

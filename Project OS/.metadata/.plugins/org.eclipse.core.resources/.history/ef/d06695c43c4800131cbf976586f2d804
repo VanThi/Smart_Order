@@ -1,0 +1,15 @@
+package com.cybersoftteam.app.project_so.dialog;
+
+public class ErrorMessageDiaolog {
+	private String title;
+	private String message;
+	private String imagePath;
+	public ErrorMessageDiaolog(String title, String message, String imagePath) {
+		super();
+		this.title = title;
+		this.message = message;
+		this.imagePath = imagePath;
+	}
+	
+	
+}

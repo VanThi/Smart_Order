@@ -1,0 +1,98 @@
+package com.cybersoftteam.app.project_so.network;
+
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import android.util.Log;
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+
+public class TCPClient  {
+	public static final String SERVERIP="192.168.0.103"; 
+	public static final int SERVERPORT=4444;
+
+	private ServerResponse serverResponse;
+	private ClientRequest clientRequest;
+	//private OnObjectRecieved onObjectRecieved;
+	
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	private Socket soc;
+	//private OnClientRecieved onClientRecieved;
+	
+	//Declare the interface. The method objectRecieved(ServerResponse serverResponse) will must be implemented in the MyActivity
+	//class at on activity
+	/*public interface OnClientRecieved{
+		public void onRecieved(ServerResponse serverResponse);
+	}*/
+	public TCPClient(ServerResponse serverResponse, ClientRequest clientRequest){
+		this.serverResponse=serverResponse;
+		this.clientRequest=clientRequest;
+		
+	}
+	
+
+	public TCPClient() {
+		InetAddress serAddress= InetAddress.getByName(SERVERIP);
+		soc=new Socket(serAddress,SERVERPORT);
+	}
+	public void run(){
+
+		try {
+			
+
+			Log.i("TCP client", "Connecting......");
+			Log.i("TCP client", "request"+ clientRequest.toString());
+			
+			
+			Log.i("TCP client", "create success socket");
+			
+			//sent request to server
+			OutputStream os = soc.getOutputStream();
+			oos = new ObjectOutputStream(os);
+			oos.writeObject(clientRequest);
+			Log.i("TCP CLient", "Sent.........");
+			//receive the response which the server sends back
+			InputStream is = soc.getInputStream();
+			ois = new ObjectInputStream(is);
+			//in this while the client listens for the response sent by the server
+			//while (mrun) {
+			Object obj = ois.readObject();
+			serverResponse = (ServerResponse) obj;
+			Log.i("TCPClient","----------------------received from server "+ (serverResponse!=null));
+//			//must use call back to call action when client received from server
+//			onClientRecieved.onRecieved(serverResponse);
+			//	}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public ServerResponse getServerResponse() {
+		return serverResponse;
+	}
+
+	public void setServerResponse(ServerResponse serverResponse) {
+		this.serverResponse = serverResponse;
+	}
+
+	public ClientRequest getClientRequest() {
+		return clientRequest;
+	}
+
+	public void setClientRequest(ClientRequest clientRequest) {
+		this.clientRequest = clientRequest;
+	}
+	
+	
+
+
+
+}

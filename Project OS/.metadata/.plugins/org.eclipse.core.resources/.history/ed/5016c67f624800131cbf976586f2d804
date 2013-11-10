@@ -1,0 +1,17 @@
+package com.cybersoftteam.app.project_so.network;
+
+public class TCPClientConnectionFactory {
+	private static TCPClient tcpClient;
+	
+	private TCPClientConnectionFactory(){
+		
+	}
+	
+	public static TCPClientConnectionFactory getTCPClient(){
+		if(tcpClient==null){
+			
+		}
+		return tcpClient;
+	}
+	
+}

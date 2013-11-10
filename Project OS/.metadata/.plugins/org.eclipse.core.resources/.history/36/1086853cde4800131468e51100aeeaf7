@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/et_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_userName"
+        android:layout_alignBottom="@+id/tv_userName"
+        android:layout_toRightOf="@+id/tv_phoneNumber"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/et_fullname"
+        android:layout_marginTop="18dp"
+        android:ems="8"
+        android:text="@string/email" />
+
+    <EditText
+        android:id="@+id/et_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_email"
+        android:layout_alignBottom="@+id/tv_email"
+        android:layout_alignLeft="@+id/et_fullname"
+        android:ems="10"
+        android:inputType="textEmailAddress" />
+
+    <Button
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/save"
+        android:layout_alignRight="@+id/et_email"
+        android:text="@string/clear" />
+
+    <EditText
+        android:id="@+id/et_fullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_comfrim"
+        android:layout_below="@+id/et_comfrim"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/registerForm"
+        android:layout_below="@+id/tv_address"
+        android:text="@string/save" />
+
+    <TextView
+        android:id="@+id/tv_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_fullName"
+        android:layout_below="@+id/registerForm"
+        android:layout_marginTop="55dp"
+        android:ems="8"
+        android:text="@string/userName" />
+
+    <TextView
+        android:id="@+id/tv_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/et_userName"
+        android:layout_marginTop="32dp"
+        android:ems="8"
+        android:text="@string/password" />
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_pass"
+        android:layout_alignBottom="@+id/tv_pass"
+        android:layout_alignLeft="@+id/et_userName"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/et_comfrim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_password"
+        android:layout_below="@+id/et_password"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/registerForm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_userName"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/registerForm"
+        android:ems="8"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/confrim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/et_comfrim"
+        android:layout_alignBottom="@+id/et_comfrim"
+        android:layout_alignParentLeft="true"
+        android:text="@string/confirm" />
+
+    <TextView
+        android:id="@+id/tv_fullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/et_fullname"
+        android:layout_alignBottom="@+id/et_fullname"
+        android:layout_alignParentLeft="true"
+        android:ems="8"
+        android:text="@string/fullName" />
+
+    <TextView
+        android:id="@+id/tv_phoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/et_email"
+        android:layout_marginTop="34dp"
+        android:ems="8"
+        android:text="@string/phoneNumber" />
+
+    <EditText
+        android:id="@+id/et_phoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_phoneNumber"
+        android:layout_alignBottom="@+id/tv_phoneNumber"
+        android:layout_toRightOf="@+id/tv_phoneNumber"
+        android:inputType="phone"
+        android:ems="10" />
+
+    <EditText
+        android:id="@+id/et_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_phoneNumber"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@+id/tv_phoneNumber"
+        android:inputType="text"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/et_address"
+        android:layout_alignBottom="@+id/et_address"
+        android:layout_alignParentLeft="true"
+        android:ems="8"
+        android:text="@string/address" />
+
+</RelativeLayout>

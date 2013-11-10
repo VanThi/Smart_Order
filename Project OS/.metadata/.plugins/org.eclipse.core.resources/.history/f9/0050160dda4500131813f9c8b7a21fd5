@@ -1,0 +1,7 @@
+package com.cybersoftteam.app.project_so.adapter;
+
+import android.widget.BaseAdapter;
+
+public class CustomerViewOrderAdapter extends BaseAdapter {
+	
+}

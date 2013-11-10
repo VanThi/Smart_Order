@@ -1,0 +1,126 @@
+package com.cybersoftteam.app.project_so.controller;
+
+import java.util.ArrayList;
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+
+
+import com.cybersoftteam.app.project_so.R;
+import com.cybersoftteam.app.project_so.adapter.CustomerViewOrderAdapter;
+import com.cybersoftteam.app.project_so.model.OrderItem;
+import com.cybersoftteam.app.project_so.network.TCPClient;
+
+import android.R.array;
+import android.R.string;
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+public class CustomerViewOrder extends Fragment{
+	private Activity act;
+	private CustomerViewOrderAdapter customerViewOrderAdapter; 
+	private OnViewOrderItemSelectListener myCallBack;
+
+	private ClientRequest clientRequest;
+	private TCPClient tcpClient;
+	private ConnectTask con;
+	private ServerResponse serverResponse;
+	private ArrayList<String> orderList;
+
+	// The container Activity must implement this interface so the frag can deliver messages
+	public interface OnViewOrderItemSelectListener{
+		public void onViewOrderItemSelected(ArrayList<OrderItem> ois);
+	}
+
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		this.act=activity;
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			myCallBack=(OnViewOrderItemSelectListener)activity;
+		} catch (Exception e) {
+
+		}
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Log.i("fragment","=============this is fragment view order================");
+		View view=inflater.inflate(R.layout.customer_vieworder, container, false);
+		
+		/*orderList.add("abc e f");
+		orderList.add("asdfads asdfas");
+		orderList.add("sadfads sdaf");*/
+		
+		Log.i("list", orderList.toString());
+		customerViewOrderAdapter=new CustomerViewOrderAdapter(act,orderList);
+		final ListView listview=(ListView)view.findViewById(R.id.customer_vieworder_item);
+		listview.setAdapter(customerViewOrderAdapter);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				String id= (String)listview.getItemAtPosition(arg2);
+				//set request object
+				clientRequest= new ClientRequest(ClientRequest.VIEWDETAIL,id);
+				//sent request get list order item to sever
+				//received list order item from sever
+				con=new ConnectTask();
+				tcpClient=new TCPClient(serverResponse, clientRequest);
+				con.execute(tcpClient);
+
+			}
+		});
+		return view;
+	}
+
+	//do in background
+	//da thu tach rieng ra, nhung khong the thuc hien duoc
+	//vi khi doiinbackground thuc thi thi khong lay lai gia tri cua serverreponse
+	//giai phap hien tai viet ngay trong activity
+
+	public class ConnectTask extends AsyncTask<TCPClient, ServerResponse, ServerResponse>{
+
+		@Override
+		protected ServerResponse doInBackground(TCPClient... tcpClients) {
+			//we create a TCPClient object and
+			Log.i("asynctask", "doing backgroud---------------------");
+			tcpClient.run();
+			Log.i("asynstask ","request "+ clientRequest+" response"+ serverResponse.getDetail());
+			publishProgress(serverResponse);
+			return serverResponse;
+		}
+
+		@Override
+		protected void onPostExecute(ServerResponse result) {
+			Log.i("asyntask", "this is dopost server response"+ tcpClient.getServerResponse().getDetail());
+			
+			ArrayList<OrderItem> ois=new ArrayList<OrderItem>();
+				// Notify the parent activity of selected item
+		        myCallBack.onViewOrderItemSelected(ois);
+		}
+	}
+
+
+	public ArrayList<String> getOrderList() {
+		return orderList;
+	}
+
+	public void setOrderList(ArrayList<String> orderList) {
+		this.orderList = orderList;
+	}
+	
+}

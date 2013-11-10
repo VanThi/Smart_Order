@@ -1,0 +1,56 @@
+package com.cybersoftteam.app.project_so.controller;
+
+
+import com.cybersoftteam.app.project_so.R;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class CustomerConfiguration extends Fragment{
+	//private Activity act;
+	private EditText username; 
+	private EditText fullname;
+	private EditText email;
+	private EditText phoneNumber;
+	private EditText address;
+	//private Button clear;
+	//private ClientRequest clientRequest;
+	//private TCPClient tcpClient;
+	//private ConnectTask con;
+	//private ServerResponse serverResponse;
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		//this.act=activity;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Log.i("fragment", "====this is fragmenr configuration======");
+		View view=inflater.inflate(R.layout.customer_configuration,container, false);
+
+		username =(EditText)view.findViewById(R.id.et_userName_con);
+		fullname =(EditText)view.findViewById(R.id.et_fullname_con);
+		email =(EditText)view.findViewById(R.id.et_email_con);
+		phoneNumber =(EditText)view.findViewById(R.id.et_phoneNumber_con);
+		address =(EditText)view.findViewById(R.id.et_address_con);
+
+		username.setText("");
+		fullname.setText("");
+		email.setText("");
+		phoneNumber.setText("");
+		address.setText("");
+
+		return view;
+	}
+
+}

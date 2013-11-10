@@ -1,0 +1,158 @@
+package com.cybersoftteam.app.project_so.controller;
+
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+
+import com.cybersoftteam.app.project_so.R;
+import com.cybersoftteam.app.project_so.network.TCPClient;
+import com.cybersoftteam.app.project_so.network.TCPClientConnectionFactory;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class LoginActivity extends Activity  {
+	private EditText userName;
+	private EditText password;
+	private Button register;
+	private Button login;
+	private ClientRequest clientRequest;
+	private ServerResponse serverResponse;
+	private ConnectTask con;
+	private TCPClient tcpClient;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+		//finish when press exit button
+		if (getIntent().getBooleanExtra("Exit", false)) {
+			finish();
+		}
+		userName =(EditText) findViewById(R.id.et_userName_login);
+		password= (EditText) findViewById(R.id.et_pass_login);
+		register=(Button) findViewById(R.id.register);
+		login=(Button) findViewById(R.id.login);
+
+		register.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent regesterIntent= new Intent(getApplicationContext(),
+						RegisterActivity.class);
+				startActivity(regesterIntent);
+			}
+		});
+
+		login.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				//set client request
+				clientRequest=new ClientRequest(ClientRequest.LOGIN,
+						userName.getText().toString(), password.getText().toString());
+				Log.i("van thi",">>>>>>>>>>>>request<<<<<<<<<<<<<"+clientRequest.toString());
+				//sent sent request and received response sever;
+
+				serverResponse =new ServerResponse();
+				tcpClient =TCPClientConnectionFactory.getTCPClient();
+				tcpClient.setClientRequest(clientRequest);
+				tcpClient.setServerResponse(serverResponse);
+				con=new ConnectTask();
+				con.execute(tcpClient);
+
+			}
+
+
+		});
+	}
+	public ClientRequest getClientRequest() {
+		return clientRequest;
+	}
+
+	public void setClientRequest(ClientRequest clientRequest) {
+		this.clientRequest = clientRequest;
+	}
+
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	//We will detached show dialog in to own packet
+	public void showDialog(String tiltle, String message){
+		final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.dialog_show_error);
+		dialog.setTitle(tiltle);
+
+		// set the custom dialog components - text, image and button
+		TextView text = (TextView) dialog.findViewById(R.id.text);
+		text.setText(message);
+		ImageView image = (ImageView) dialog.findViewById(R.id.image);
+		image.setImageResource(R.drawable.error);
+
+		Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+		// if button is clicked, close the custom dialog
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
+	}
+	@Override
+	public void onBackPressed() {
+		return;
+	}
+//	@Override
+//	public void onRecieved(ServerResponse serverResponse) {
+//
+//	}
+
+	//do in background
+	//da thu tach rieng ra, nhung khong the thuc hien duoc
+	//vi khi doiinbackground thuc thi thi khong lay lai gia tri cua serverreponse
+	//giai phap hien tai viet ngay trong activity
+
+	public class ConnectTask extends AsyncTask<TCPClient, ServerResponse, ServerResponse>{
+
+		@Override
+		protected ServerResponse doInBackground(TCPClient... tcpClients) {
+			//we create a TCPClient object and
+			Log.i("asynctask", "doing backgroud---------------------");
+			tcpClient.run();
+			return serverResponse;
+		}
+
+		@Override
+		protected void onPostExecute(ServerResponse result) {
+			Log.i("asyntask", "this is dopost server response"+ tcpClient.getServerResponse().getMenu());
+			//ArrayList<String> menuItem=new ArrayList<String>();
+			if(tcpClient.getServerResponse().getMenu()!=null){
+				Intent customerScreenIntent=new Intent(getApplicationContext(), CustomerScreen.class);
+				//customerScreenIntent.putStringArrayListExtra("menuitem", menuItem);
+				//code complete
+				customerScreenIntent.putStringArrayListExtra("menuitem", tcpClient.getServerResponse().getMenu());
+				startActivity(customerScreenIntent);
+			}else{
+				showDialog("Login", "User name or password not variable");
+			}
+		}
+	}
+
+}

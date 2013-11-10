@@ -1,0 +1,22 @@
+package com.cybersoftteam.app.project_so.protocol;
+
+import smartorder.network.ServerResponse;
+import android.os.AsyncTask;
+
+public class ConnectTask extends AsyncTask<ServerResponse, ServerResponse, TCPClient>{
+	
+	private TCPClient myTClient;
+	private ServerResponse serverResponse;
+	
+	public ConnectTask(TCPClient myClient, ServerResponse serverResponse){
+		this.myTClient=myClient;
+		this.serverResponse=serverResponse;
+	}
+	
+	@Override
+	protected TCPClient doInBackground(ServerResponse... params) {
+		
+		return null;
+	}
+	
+}

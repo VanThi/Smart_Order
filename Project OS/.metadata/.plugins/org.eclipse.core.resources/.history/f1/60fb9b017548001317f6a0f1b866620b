@@ -1,0 +1,187 @@
+package com.cybersoftteam.app.project_so.controller;
+
+import java.util.ArrayList;
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+
+import com.cybersoftteam.app.project_so.R;
+import com.cybersoftteam.app.project_so.controller.CustomerViewOrder.OnViewOrderItemSelectListener;
+import com.cybersoftteam.app.project_so.network.TCPClient;
+import com.cybersoftteam.app.project_so.network.TCPClientConnectionFactory;
+
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+
+public class CustomerScreen extends CustomerBasedAcitivy implements OnClickListener,
+OnViewOrderItemSelectListener{
+	private View lastView;
+	private CustomerMenuItem customerMenuItem;
+	private ArrayList<String> menuItems;
+
+	private ClientRequest clientRequest;
+	private TCPClient tcpClient;
+	private ConnectTask con;
+	private ServerResponse serverResponse;
+	private CustomerViewOrder fragmentcCustomerViewOrder;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.i("activity", "=====this is customer screen======");
+		//setContentView(R.layout.customer_screen);
+		setLayoutIds(R.layout.customer_menu, R.layout.customer_screen);
+		setAnimationDuration(300);
+		setAnimationType(MENU_TYPE_SLIDEOVER);
+		super.onCreate(savedInstanceState);
+
+		// Set on clicking listener object
+		lastView = findViewById(R.id.customer_menu_item);
+		lastView.setOnClickListener(this);
+		findViewById(R.id.configuration).setOnClickListener(this);
+		findViewById(R.id.viewOrder).setOnClickListener(this);
+		findViewById(R.id.logout).setOnClickListener(this);
+		findViewById(R.id.logout).setOnClickListener(this);
+		findViewById(R.id.exit).setOnClickListener(this);
+		Log.i("van thi", "===========before init customer menu item===========");
+		customerMenuItem =new CustomerMenuItem();
+		Log.i("van thi", "===========after init customer menu item===========");
+
+		Bundle extras=getIntent().getExtras();
+		menuItems=extras.getStringArrayList("menuitem");
+
+		customerMenuItem.updateItems(menuItems);
+
+		// Create content fragment
+		if (savedInstanceState == null) {
+
+			// Add the fragment to the 'fragment_container' FrameLayout
+			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,customerMenuItem ).commit();
+		} else {
+			viewContent(R.id.fragment_container, customerMenuItem);
+		}	
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id=v.getId();
+		if(id==R.id.customer_menu_item){
+			showMenuItem();
+		}else if(id==R.id.configuration){
+			showConfiguration();
+		}else if(id==R.id.viewOrder){
+			showViewOrder();
+		}else if(id==R.id.logout){
+			//close connect, clear data and ......
+			Intent logoutIntent=new Intent(getApplicationContext(),LoginActivity.class);
+			startActivity(logoutIntent);
+		}else{
+			//close connect, clear data and.......
+
+			//close app
+			Intent intent = new Intent(this, LoginActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.putExtra("Exit", true);
+			startActivity(intent);
+			//finish();
+		}
+		// Set menu item background
+		if (this.lastView != null) {
+			this.lastView.setBackgroundResource(R.drawable.menu_bg);
+		}
+
+		lastView = v;
+		v.setBackgroundResource(R.drawable.menu_bg_selected);
+	}
+
+	public void showMenuItem(){
+		toggleMenu();
+		//show menu item
+		CustomerMenuItem fragment=new CustomerMenuItem();
+		viewContent(R.id.fragment_container, fragment);
+	}
+
+	@Override
+	public void showMenu(View view) {
+		toggleMenu();
+	}
+
+	public void showConfiguration(){
+		toggleMenu();
+		
+		CustomerConfiguration fragment=new CustomerConfiguration();
+		viewContent(R.id.fragment_container, fragment);
+	}
+
+	public void showViewOrder(){
+		toggleMenu();
+		
+		fragmentcCustomerViewOrder=new CustomerViewOrder();
+		//set request object
+		
+		clientRequest =new ClientRequest(ClientRequest.VIEWORDERS);
+		tcpClient =TCPClientConnectionFactory.getTCPClient();
+		tcpClient.setClientRequest(clientRequest);
+		tcpClient.setServerResponse(serverResponse);
+		con=new ConnectTask();
+		con.execute(tcpClient);
+	}
+
+
+	@Override
+	public void onBackPressed() {
+		return;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public void onViewOrderItemSelected(String orderDetail) {
+
+		//the customer selected the view order item of customer view order
+		//capture the list view order item from the customer screen
+
+		ViewOrderDeital listViewOrderItem=new ViewOrderDeital();
+		viewContent(R.id.fragment_container, listViewOrderItem);
+
+		listViewOrderItem.updateListViewOrder(orderDetail);
+
+	}
+
+	//do in background
+	//da thu tach rieng ra, nhung khong the thuc hien duoc
+	//vi khi doiinbackground thuc thi thi khong lay lai gia tri cua serverreponse
+	//giai phap hien tai viet ngay trong activity
+
+	public class ConnectTask extends AsyncTask<TCPClient, ServerResponse, ServerResponse>{
+
+		@Override
+		protected ServerResponse doInBackground(TCPClient... tcpClients) {
+			//we create a TCPClient object and
+			Log.i("asynctask", "doing backgroud---------------------");
+			tcpClient.run();
+			return serverResponse;
+		}
+
+		@Override
+		protected void onPostExecute(ServerResponse result) {
+			//Log.i("asyntask", "this is dopost server response"+ tcpClient.getServerResponse().getOrderIDs());
+			if(tcpClient.getClientRequest().getRequestID()==ClientRequest.VIEWORDERS){
+				fragmentcCustomerViewOrder.setOrderList(tcpClient.getServerResponse().getOrderIDs());
+				viewContent(R.id.fragment_container, fragmentcCustomerViewOrder);
+			}
+			//if request is order
+			//process order
+
+			//if request if update 
+			//process update
+			//update list adapter
+		}
+	}
+}

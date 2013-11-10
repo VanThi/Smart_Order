@@ -1,0 +1,50 @@
+package com.cybersoftteam.app.project_so.network;
+
+
+
+import smartorder.common.ClientRequest;
+import smartorder.common.ServerResponse;
+import android.R.bool;
+import android.app.DownloadManager.Request;
+import android.os.AsyncTask;
+import android.util.Log;
+
+public class ConnectTask extends AsyncTask<ServerResponse, ServerResponse, TCPClient>{
+
+	private TCPClient myTCPClient;
+	private ServerResponse serverResponse;
+	private ClientRequest clientRequest;
+	private boolean flag=false;
+
+	public ConnectTask(TCPClient myClient, ServerResponse serverResponse, ClientRequest clientRequest, boolean flag){
+		this.myTCPClient=myClient;
+		this.serverResponse=serverResponse;
+		this.flag=flag;
+		this.clientRequest=clientRequest;
+		Log.i("network", "tao connect task thanh cong");
+	}
+
+	@Override
+	protected TCPClient doInBackground(ServerResponse... params) {
+		//we create a TCPClient object and
+		Log.i("asynctask", "doing backgroud---------------------");
+		myTCPClient =new TCPClient(serverResponse, clientRequest);
+		myTCPClient.run();
+		Log.i("asynstask ","request "+ clientRequest+" response"+ serverResponse);
+		return myTCPClient;
+	}
+	
+	@Override
+	protected void onProgressUpdate(ServerResponse... values) {
+		flag=true;
+		serverResponse=values[0];
+		
+	}
+	
+	@Override
+	protected void onPostExecute(TCPClient result) {
+		
+		
+	}
+}
+

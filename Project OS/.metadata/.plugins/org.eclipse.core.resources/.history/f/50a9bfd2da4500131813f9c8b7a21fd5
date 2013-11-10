@@ -1,0 +1,19 @@
+package com.cybersoftteam.app.project_so.adapter;
+
+import java.util.ArrayList;
+
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+
+public class CustomerViewOrderAdapter extends BaseAdapter {
+	private Context context;
+	private ArrayList<String> 
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}
